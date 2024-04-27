@@ -28,7 +28,7 @@ public class Course {
     private String description;
 
     @Column(name = "coursel_price")
-    private BigDecimal coursel_price;
+    private BigDecimal coursePrice;
 
     @Column(name = "coursel_cover")
     private String cover;

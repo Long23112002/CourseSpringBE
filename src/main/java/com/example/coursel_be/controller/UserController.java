@@ -35,7 +35,7 @@ public class UserController {
                 boolean isSaved = userService.saveUser(userRequest);
                 if(isSaved){
                     ApiResponse<User> apiResponse = new ApiResponse<>();
-                    apiResponse.setCode(200);
+                    apiResponse.setCode(201);
                     apiResponse.setMessage("User registered successfully");
                     return ResponseEntity.ok(apiResponse);
                 }
