@@ -94,4 +94,7 @@ public class User {
     @OneToMany(mappedBy = "user" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseHistory> listPurchaseHistory;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserCourse> userCourses;
+
 }

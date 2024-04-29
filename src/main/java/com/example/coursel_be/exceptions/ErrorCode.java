@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public enum ErrorCode {
     UNCATEGORIZED(500, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_NOT_FOUND(404, "User not found", HttpStatus.NOT_FOUND),

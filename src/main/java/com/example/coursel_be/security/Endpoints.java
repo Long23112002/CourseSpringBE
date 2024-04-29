@@ -12,11 +12,13 @@ public class Endpoints {
     public static final String[] PUBLIC_POST = {
             "/api/v1/user/register",
             "/api/v1/user/login",
-            "/login/oauth2/code/google"
+            "/login/oauth2/code/google",
+
     };
 
     public static final String[] ADMIN_POST ={
             "/api/v1/course/save",
+            "/api/v1/course/delete/**",
     };
 
     public static final String[] ADMIN_GET ={
@@ -24,9 +26,17 @@ public class Endpoints {
             "/api/v1/course/all",
     };
 
+    public static final String[] ADMIN_PUT ={
+            "/api/v1/course/update/**",
+            "/api/v1/course/changeStatus/**",
+    };
+
+
     public static final String[] CUSTOMER_GET ={
             "/api/v1/course/get/**",
             "/api/v1/course/all",
     };
+
+
 
 }

@@ -48,9 +48,6 @@ public class Course {
     @Column(name = "update_by")
     private String updateBy;
 
-    @Column(name = "active")
-    private Boolean active;
-
     @Column(name = "deleted")
     private Boolean deleted;
 
@@ -59,10 +56,11 @@ public class Course {
         createdAt = new Date();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updateAt = new Date();
-    }
+//    @PreUpdate
+//    protected void onUpdate() {
+//        updateAt = new Date();
+//    }
+
 
     @OneToMany(mappedBy = "course", cascade = {
             CascadeType.DETACH,
@@ -87,5 +85,7 @@ public class Course {
     @OneToMany(mappedBy = "course" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PurchaseHistory> listPurchaseHistory;
 
+    @OneToMany(mappedBy = "course")
+    private List<UserCourse> courseUsers;
 
 }

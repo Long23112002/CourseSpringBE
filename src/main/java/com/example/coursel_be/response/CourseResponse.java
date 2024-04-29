@@ -33,7 +33,5 @@ public class CourseResponse {
 
     private String updateBy;
 
-    private Boolean active;
-
     private Boolean deleted;
 }

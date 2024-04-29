@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, Endpoints.PUBLIC_GET).permitAll()
                         .requestMatchers(HttpMethod.POST, Endpoints.PUBLIC_POST).permitAll()
                         .requestMatchers(HttpMethod.POST, Endpoints.ADMIN_POST).hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, Endpoints.ADMIN_PUT).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, Endpoints.ADMIN_GET).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, Endpoints.CUSTOMER_GET).hasAuthority("CUSTOMER")
         );

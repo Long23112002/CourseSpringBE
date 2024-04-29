@@ -2,6 +2,7 @@ package com.example.coursel_be.controller;
 
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.request.CourseRequest;
+import com.example.coursel_be.request.CourseUpdateRequest;
 import com.example.coursel_be.response.ApiResponse;
 import com.example.coursel_be.response.CourseResponse;
 import com.example.coursel_be.service.CourseService;
@@ -39,10 +40,7 @@ public class CourseController {
             }
             return ResponseEntity.badRequest().body(isSaved);
         } catch (AppException e) {
-            ApiResponse<String> errorResponse = new ApiResponse<>();
-            errorResponse.setCode(e.getErrorCode().getCode());
-            errorResponse.setMessage(e.getErrorCode().getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -86,6 +84,60 @@ public class CourseController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/delete/{courseId}")
+    public ResponseEntity<?> deleteCourseById(@PathVariable Long courseId) {
+        try {
+            String isDeleted = courseService.deleteCourseById(courseId);
+            return getResponseEntity(isDeleted);
+        } catch (AppException e) {
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCourse(@Valid @RequestBody CourseUpdateRequest courseUpdateRequest) {
+        try {
+            String isUpdated = courseService.updateCourse(courseUpdateRequest);
+            return getResponseEntity(isUpdated);
+        } catch (AppException e) {
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/changeStatus/{courseId}")
+    public ResponseEntity<?> changeStatusCourse(@PathVariable Long courseId) {
+        try {
+            String isUpdated = courseService.changeStatusCourse(courseId);
+            return getResponseEntity(isUpdated);
+        } catch (AppException e) {
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    private ResponseEntity<?> getResponseEntity(String isUpdated) {
+        if (isUpdated != null) {
+            ApiResponse<String> apiResponse = new ApiResponse<>();
+            apiResponse.setCode(200);
+            apiResponse.setMessage(isUpdated);
+            return ResponseEntity.ok(apiResponse);
+        }
+        return ResponseEntity.badRequest().body(isUpdated);
+    }
+
+    private ApiResponse<String> buildErrorResponse(AppException e) {
+        ApiResponse<String> errorResponse = new ApiResponse<>();
+        errorResponse.setCode(e.getErrorCode().getCode());
+        errorResponse.setMessage(e.getMessage());
+        return errorResponse;
     }
 
 
