@@ -1,5 +1,6 @@
 package com.example.coursel_be.entity;
 
+import com.example.coursel_be.listener.AuditCourseListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EntityListeners(AuditCourseListener.class)
 public class User {
 
     @Id
@@ -32,13 +34,13 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date" , updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Long createdDate;
 
     @Column(name = "updated_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDate;
+    private Long updatedDate;
 
     @Column(name = "avatar")
     private String avatar;
@@ -57,17 +59,6 @@ public class User {
 
     @Column(name="status")
     private Boolean isDeleted;
-
-
-    @PrePersist
-    protected void onCreate() {
-        createdDate = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedDate = new Date();
-    }
 
 
     @ManyToMany(fetch = FetchType.EAGER , cascade = {

@@ -2,11 +2,10 @@ package com.example.coursel_be.controller;
 
 import com.example.coursel_be.entity.User;
 import com.example.coursel_be.exceptions.AppException;
-import com.example.coursel_be.exceptions.ErrorCode;
-import com.example.coursel_be.repository.UserRepository;
-import com.example.coursel_be.request.LoginRequest;
-import com.example.coursel_be.request.UserRequest;
-import com.example.coursel_be.response.ApiResponse;
+import com.example.coursel_be.request.user.LoginRequest;
+import com.example.coursel_be.request.user.UserCourseRequest;
+import com.example.coursel_be.request.user.UserRequest;
+import com.example.coursel_be.response.error.ApiResponse;
 import com.example.coursel_be.response.JwtResponse;
 import com.example.coursel_be.service.UserService;
 import jakarta.validation.Valid;
@@ -33,7 +32,7 @@ public class UserController {
         try {
             if (userRequest != null) {
                 boolean isSaved = userService.saveUser(userRequest);
-                if(isSaved){
+                if (isSaved) {
                     ApiResponse<User> apiResponse = new ApiResponse<>();
                     apiResponse.setCode(201);
                     apiResponse.setMessage("User registered successfully");
@@ -55,7 +54,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) {
         try {
-            if (loginRequest.getUserName() != null && loginRequest.getPassword() != null){
+            if (loginRequest.getUserName() != null && loginRequest.getPassword() != null) {
                 JwtResponse jwtResponse = userService.login(loginRequest);
                 ApiResponse<JwtResponse> apiResponse = new ApiResponse<>();
                 apiResponse.setCode(200);
@@ -72,6 +71,27 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.badRequest().body(new ApiResponse<>(400, "Login failed", null));
+    }
+
+    @PostMapping("/addUserCourse")
+    public ResponseEntity<?> addUserCourse(@RequestBody UserCourseRequest userCourseRequest){
+        try {
+            if (userCourseRequest != null) {
+                String message = userService.addCourseToUser(userCourseRequest.getUserId(), userCourseRequest.getCourseId());
+                ApiResponse<String> apiResponse = new ApiResponse<>();
+                apiResponse.setCode(200);
+                apiResponse.setMessage(message);
+                return ResponseEntity.ok(apiResponse);
+            }
+            return ResponseEntity.badRequest().body("Add course to user failed");
+        } catch (AppException e) {
+            ApiResponse<String> errorResponse = new ApiResponse<>();
+            errorResponse.setCode(e.getErrorCode().getCode());
+            errorResponse.setMessage(e.getErrorCode().getMessage());
+            return ResponseEntity.status(e.getErrorCode().getStatusCode()).body(errorResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/hello")

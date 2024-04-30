@@ -1,4 +1,4 @@
-package com.example.coursel_be.request;
+package com.example.coursel_be.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

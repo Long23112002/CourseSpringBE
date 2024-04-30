@@ -1,4 +1,4 @@
-package com.example.coursel_be.response;
+package com.example.coursel_be.response.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse <T> {
+public class ApiResponse<T> {
     private int code;
     private String message;
     private T result;

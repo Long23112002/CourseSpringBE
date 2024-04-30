@@ -1,10 +1,10 @@
 package com.example.coursel_be.controller;
 
 import com.example.coursel_be.exceptions.AppException;
-import com.example.coursel_be.request.CourseRequest;
-import com.example.coursel_be.request.CourseUpdateRequest;
-import com.example.coursel_be.response.ApiResponse;
-import com.example.coursel_be.response.CourseResponse;
+import com.example.coursel_be.request.course.CourseRequest;
+import com.example.coursel_be.request.course.CourseUpdateRequest;
+import com.example.coursel_be.response.error.ApiResponse;
+import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

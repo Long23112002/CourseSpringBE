@@ -1,4 +1,4 @@
-package com.example.coursel_be.service.Impl;
+package com.example.coursel_be.service.impl;
 
 import com.example.coursel_be.entity.Course;
 import com.example.coursel_be.entity.User;
@@ -6,22 +6,18 @@ import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.exceptions.ErrorCode;
 import com.example.coursel_be.repository.CourseRepository;
 import com.example.coursel_be.repository.UserRepository;
-import com.example.coursel_be.request.CourseRequest;
-import com.example.coursel_be.request.CourseUpdateRequest;
-import com.example.coursel_be.response.CourseResponse;
+import com.example.coursel_be.request.course.CourseRequest;
+import com.example.coursel_be.request.course.CourseUpdateRequest;
+import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service
@@ -100,12 +96,15 @@ public class CourseServiceImpl implements CourseService {
     public String updateCourse(CourseUpdateRequest courseUpdateRequest) {
         Optional<Course> existingCourse = Optional.ofNullable(courseRepository.findById(courseUpdateRequest.getIdCourse()).orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND)));
         boolean existsByTitle = courseRepository.existsByTitle(courseUpdateRequest.getTitle());
+
+        if (Objects.equals(existingCourse.get().getTitle(), courseUpdateRequest.getTitle())) {
+            existsByTitle = false;
+        }
         if (existsByTitle) {
             return "Course already exists";
         }
         if (existingCourse.isPresent()) {
             Course courseToUpdate = getCourse(courseUpdateRequest, existingCourse);
-            courseToUpdate.setUpdateAt(new Date());
             courseRepository.save(courseToUpdate);
             return "Course updated successfully";
         }
@@ -131,7 +130,7 @@ public class CourseServiceImpl implements CourseService {
         course.setDescription(courseRequest.getDescription());
         course.setCoursePrice(courseRequest.getCoursePrice());
         course.setCreateBy(user.getFullName());
-        course.setCreatedAt(new Date(System.currentTimeMillis()));
+//        course.setCreatedAt(new Date(System.currentTimeMillis()));
         course.setDeleted(true);
         return course;
     }
@@ -142,6 +141,8 @@ public class CourseServiceImpl implements CourseService {
         courseToUpdate.setUpdateBy(user.getFullName());
         if (courseUpdateRequest.getTitle() != null) {
             courseToUpdate.setTitle(courseUpdateRequest.getTitle());
+        } else {
+            courseToUpdate.setTitle(existingCourse.get().getTitle());
         }
         if (courseUpdateRequest.getDescription() != null) {
             courseToUpdate.setDescription(courseUpdateRequest.getDescription());
@@ -165,7 +166,14 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCover(course.getCover());
         courseResponse.setDeleted(course.getDeleted());
         courseResponse.setUpdateBy(course.getUpdateBy());
-        courseResponse.setCreatedAt(course.getCreatedAt());
+        courseResponse.setCreatedAt(formatTimestamp(course.getCreatedAt()));
+        courseResponse.setUpdateAt(formatTimestamp(course.getUpdateAt()));
         return courseResponse;
+    }
+
+    private String formatTimestamp(long timestampMillis) {
+        Date date = new Date(timestampMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
     }
 }

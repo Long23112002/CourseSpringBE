@@ -16,27 +16,31 @@ public class Endpoints {
 
     };
 
-    public static final String[] ADMIN_POST ={
+    public static final String[] ADMIN_POST = {
             "/api/v1/course/save",
             "/api/v1/course/delete/**",
+            "/api/v1/course/addUserToCourse",
     };
 
-    public static final String[] ADMIN_GET ={
+    public static final String[] ADMIN_GET = {
             "/api/v1/course/get/**",
             "/api/v1/course/all",
     };
 
-    public static final String[] ADMIN_PUT ={
+    public static final String[] ADMIN_PUT = {
             "/api/v1/course/update/**",
             "/api/v1/course/changeStatus/**",
     };
 
 
-    public static final String[] CUSTOMER_GET ={
+    public static final String[] CUSTOMER_GET = {
             "/api/v1/course/get/**",
             "/api/v1/course/all",
     };
 
+    public static final String[] CUSTOMER_POST = {
+            "/api/v1/user/addUserCourse",
+    };
 
 
 }

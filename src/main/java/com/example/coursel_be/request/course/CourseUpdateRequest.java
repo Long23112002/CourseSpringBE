@@ -1,6 +1,9 @@
-package com.example.coursel_be.request;
+package com.example.coursel_be.request.course;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +15,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CourseRequest {
+public class CourseUpdateRequest {
 
     private Long idCourse;
 
-    @NotBlank(message = "Id user create is not empty")
-    private Long idUserCreate;
+    @NotNull(message = "Id user create is not empty")
+    private Long idUserUpdate;
 
     @Size(min = 10, max = 50, message = "Title must be between 5 and 50 characters")
     @NotBlank(message = "Title is not empty")
@@ -33,6 +36,5 @@ public class CourseRequest {
     private String cover;
 
     private Boolean deleted;
-
 
 }

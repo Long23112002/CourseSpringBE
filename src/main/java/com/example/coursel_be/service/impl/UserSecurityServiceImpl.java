@@ -1,4 +1,4 @@
-package com.example.coursel_be.service.Impl;
+package com.example.coursel_be.service.impl;
 
 import com.example.coursel_be.entity.Role;
 import com.example.coursel_be.entity.User;

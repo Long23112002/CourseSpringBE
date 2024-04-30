@@ -18,7 +18,7 @@ import java.io.IOException;
 public class JwtFilterSevice extends OncePerRequestFilter {
 
     @Autowired
-    private  JwtService jwtService;
+    private JwtService jwtService;
 
     @Autowired
     private UserSecurityService userSecurityService;
@@ -42,7 +42,7 @@ public class JwtFilterSevice extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

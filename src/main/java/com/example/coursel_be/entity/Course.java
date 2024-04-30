@@ -1,11 +1,11 @@
 package com.example.coursel_be.entity;
 
 
+import com.example.coursel_be.listener.AuditCourseListener;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EntityListeners(AuditCourseListener.class)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +34,9 @@ public class Course {
     @Column(name = "coursel_cover")
     private String cover;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at" , updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Long createdAt;
 
     @Column(name = "create_by")
     private String createBy;
@@ -43,7 +44,7 @@ public class Course {
 
     @Column(name = "update_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updateAt;
+    private Long updateAt;
 
     @Column(name = "update_by")
     private String updateBy;
@@ -51,15 +52,7 @@ public class Course {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date();
-    }
 
-//    @PreUpdate
-//    protected void onUpdate() {
-//        updateAt = new Date();
-//    }
 
 
     @OneToMany(mappedBy = "course", cascade = {

@@ -1,18 +1,12 @@
-package com.example.coursel_be.request;
+package com.example.coursel_be.request.user;
 
-import com.example.coursel_be.entity.Role;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.List;
 
 
 @Data
@@ -21,16 +15,16 @@ import java.util.List;
 @Builder
 public class UserRequest {
 
-    @Size(min = 5, max = 50 , message = "Username must be between 5 and 50 characters")
+    @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters")
     @NotBlank(message = "Username is required")
     private String userName;
 
     @NotBlank(message = "Full name is required")
-    @Size(min = 5, max = 50 , message = "Full name must be between 5 and 50 characters")
+    @Size(min = 5, max = 50, message = "Full name must be between 5 and 50 characters")
     private String fullName;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 50 , message = "Password must be between 5 and 50 characters")
+    @Size(min = 8, max = 50, message = "Password must be between 5 and 50 characters")
     private String password;
 
     @NotBlank(message = "Email is required")

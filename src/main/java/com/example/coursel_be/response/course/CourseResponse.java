@@ -1,13 +1,12 @@
-package com.example.coursel_be.response;
+package com.example.coursel_be.response.course;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -25,11 +24,13 @@ public class CourseResponse {
 
     private String cover;
 
-    private Date createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String createdAt;
 
     private String createBy;
 
-    private Date updateAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String updateAt;
 
     private String updateBy;
 
