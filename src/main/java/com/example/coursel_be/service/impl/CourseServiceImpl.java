@@ -11,6 +11,7 @@ import com.example.coursel_be.request.course.CourseUpdateRequest;
 import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,11 @@ import java.util.*;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    private static final Logger log = LoggerFactory.getLogger(CourseServiceImpl.class);
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
 
-    @Autowired
+
     public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;

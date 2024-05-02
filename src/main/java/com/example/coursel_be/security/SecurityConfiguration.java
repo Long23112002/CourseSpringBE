@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, Endpoints.ADMIN_GET).hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, Endpoints.CUSTOMER_GET).hasAuthority("CUSTOMER")
                         .requestMatchers(HttpMethod.POST, Endpoints.CUSTOMER_POST).hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT, Endpoints.CUSTOMER_PUT).hasAuthority("CUSTOMER")
         );
         http.cors(cors -> {
             cors.configurationSource(request -> {

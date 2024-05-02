@@ -5,6 +5,7 @@ import com.example.coursel_be.listener.AuditCourseListener;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @EntityListeners(AuditCourseListener.class)
-public class Course {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_course")

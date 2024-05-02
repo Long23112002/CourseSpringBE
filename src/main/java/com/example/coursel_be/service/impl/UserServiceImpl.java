@@ -1,18 +1,14 @@
 package com.example.coursel_be.service.impl;
 
-import com.example.coursel_be.entity.Course;
-import com.example.coursel_be.entity.Role;
-import com.example.coursel_be.entity.User;
-import com.example.coursel_be.entity.UserCourse;
+import com.example.coursel_be.entity.*;
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.exceptions.ErrorCode;
-import com.example.coursel_be.repository.CourseRepository;
-import com.example.coursel_be.repository.RoleRepository;
-import com.example.coursel_be.repository.UserCourseRepository;
-import com.example.coursel_be.repository.UserRepository;
+import com.example.coursel_be.repository.*;
 import com.example.coursel_be.request.user.LoginRequest;
 import com.example.coursel_be.request.user.UserRequest;
+import com.example.coursel_be.request.user.UserUpdateRequest;
 import com.example.coursel_be.response.JwtResponse;
+import com.example.coursel_be.response.user.UserResponse;
 import com.example.coursel_be.service.JwtService;
 import com.example.coursel_be.service.UserService;
 import jakarta.transaction.Transactional;
@@ -41,8 +37,9 @@ public class UserServiceImpl implements UserService {
     private final CourseRepository courseRepository;
     private final UserCourseRepository userCourseRepository;
 
+
     @Autowired
-    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager, JwtService jwtService, CourseRepository courseRepository, UserCourseRepository userCourseRepository) {
+    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager, JwtService jwtService, CourseRepository courseRepository, UserCourseRepository userCourseRepository, BlogRepository blogRepository, PurchaseHistoryRepository purchaseHistoryRepository, EnrolmentsRepository enrolmentsRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -134,9 +131,26 @@ public class UserServiceImpl implements UserService {
         return "Course not found to add";
     }
 
+
+
     @Override
-    public String updateUser(UserRequest userRequest) {
-        return "";
+    public List<UserResponse> getAllUsers() {
+        return userRepository.getAllUser();
+    }
+
+    @Override
+    public String updateUser(UserUpdateRequest userUpdateRequest) {
+//        Long userId = userUpdateRequest.getIdUser();
+        Optional<User> user = Optional.ofNullable(userRepository.findById(1L).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
+        if (user.isPresent()) {
+            user.get().setFullName(userUpdateRequest.getFullName());
+            user.get().setPhone(userUpdateRequest.getPhone());
+            user.get().setGender(userUpdateRequest.getGender());
+            user.get().setAvatar(userUpdateRequest.getAvatar());
+            userRepository.save(user.get());
+            return "User updated successfully";
+        }
+        return "User not found to update";
     }
 
 

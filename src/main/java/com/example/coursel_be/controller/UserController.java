@@ -5,14 +5,18 @@ import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.request.user.LoginRequest;
 import com.example.coursel_be.request.user.UserCourseRequest;
 import com.example.coursel_be.request.user.UserRequest;
+import com.example.coursel_be.request.user.UserUpdateRequest;
 import com.example.coursel_be.response.error.ApiResponse;
 import com.example.coursel_be.response.JwtResponse;
+import com.example.coursel_be.response.user.UserResponse;
 import com.example.coursel_be.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -84,6 +88,61 @@ public class UserController {
                 return ResponseEntity.ok(apiResponse);
             }
             return ResponseEntity.badRequest().body("Add course to user failed");
+        } catch (AppException e) {
+            ApiResponse<String> errorResponse = new ApiResponse<>();
+            errorResponse.setCode(e.getErrorCode().getCode());
+            errorResponse.setMessage(e.getErrorCode().getMessage());
+            return ResponseEntity.status(e.getErrorCode().getStatusCode()).body(errorResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+//    @GetMapping("/getUserInfo/{userId}")
+//    public ResponseEntity<?> getUserInfo(@PathVariable Long userId){
+//        try {
+//            if (userId != null) {
+//                return ResponseEntity.ok(userService.getUserInfoById(userId));
+//            }
+//            return ResponseEntity.badRequest().body("User not found");
+//        } catch (AppException e) {
+//            ApiResponse<String> errorResponse = new ApiResponse<>();
+//            errorResponse.setCode(e.getErrorCode().getCode());
+//            errorResponse.setMessage(e.getErrorCode().getMessage());
+//            return ResponseEntity.status(e.getErrorCode().getStatusCode()).body(errorResponse);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+
+    @GetMapping("/allUsers")
+    public ResponseEntity<?> getAllUsers(){
+        try {
+            ApiResponse<List<UserResponse>> apiResponse = new ApiResponse<>();
+            apiResponse.setCode(200);
+            apiResponse.setResult(userService.getAllUsers());
+            return ResponseEntity.ok(apiResponse);
+        } catch (AppException e) {
+            ApiResponse<String> errorResponse = new ApiResponse<>();
+            errorResponse.setCode(e.getErrorCode().getCode());
+            errorResponse.setMessage(e.getErrorCode().getMessage());
+            return ResponseEntity.status(e.getErrorCode().getStatusCode()).body(errorResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+    @PutMapping("/updateUser")
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
+        try {
+            if (userUpdateRequest != null) {
+                String message = userService.updateUser(userUpdateRequest);
+                ApiResponse<String> apiResponse = new ApiResponse<>();
+                apiResponse.setCode(200);
+                apiResponse.setMessage(message);
+                return ResponseEntity.ok(apiResponse);
+            }
+            return ResponseEntity.badRequest().body("Update user failed");
         } catch (AppException e) {
             ApiResponse<String> errorResponse = new ApiResponse<>();
             errorResponse.setCode(e.getErrorCode().getCode());

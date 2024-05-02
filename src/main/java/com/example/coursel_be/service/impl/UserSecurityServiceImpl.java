@@ -18,8 +18,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserSecurityServiceImpl implements UserSecurityService {
 
-    @Autowired
+
     private UserRepository userRepository;
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Autowired
     private RoleRepository roleRepository;

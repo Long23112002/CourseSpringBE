@@ -2,8 +2,10 @@ package com.example.coursel_be.entity;
 
 import com.example.coursel_be.listener.AuditCourseListener;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @EntityListeners(AuditCourseListener.class)
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +49,7 @@ public class User {
 
     @Column(name="gender")
     private String gender;
+
 
     @Column(name="phone")
     private String phone;

@@ -30,14 +30,4 @@ public class UserResponse {
 
     private Boolean isDeleted;
 
-    private List<Role> listRoles;
-
-    private List<Blog> listBlogs;
-
-    private List<Enrolments> listEnrolments;
-
-    private List<PurchaseHistory> listPurchaseHistory;
-
-    private List<UserCourse> userCourses;
-
 }

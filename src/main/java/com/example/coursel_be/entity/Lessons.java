@@ -3,6 +3,7 @@ package com.example.coursel_be.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Lessons {
+public class Lessons implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

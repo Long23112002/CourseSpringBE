@@ -25,11 +25,13 @@ public class Endpoints {
     public static final String[] ADMIN_GET = {
             "/api/v1/course/get/**",
             "/api/v1/course/all",
+            "/api/v1/user/allUsers",
     };
 
     public static final String[] ADMIN_PUT = {
             "/api/v1/course/update/**",
             "/api/v1/course/changeStatus/**",
+
     };
 
 
@@ -40,6 +42,10 @@ public class Endpoints {
 
     public static final String[] CUSTOMER_POST = {
             "/api/v1/user/addUserCourse",
+    };
+
+    public static final String[] CUSTOMER_PUT = {
+            "/api/v1/user/updateUser",
     };
 
 

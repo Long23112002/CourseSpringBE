@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "user_course")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCourse {
+public class UserCourse implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
