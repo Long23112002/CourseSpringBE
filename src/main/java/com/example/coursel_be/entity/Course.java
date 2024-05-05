@@ -1,12 +1,15 @@
 package com.example.coursel_be.entity;
 
 
-import com.example.coursel_be.listener.AuditCourseListener;
+
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,8 +18,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EntityListeners(AuditCourseListener.class)
 public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +36,17 @@ public class Course implements Serializable {
     @Column(name = "coursel_cover")
     private String cover;
 
-    @Column(name = "created_at" , updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Long createdAt;
+    @Column(name = "created_at" , updatable = false , nullable = false)
+    @CreationTimestamp
+    private Date createdAt;
 
     @Column(name = "create_by")
     private String createBy;
 
 
     @Column(name = "update_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Long updateAt;
+    @UpdateTimestamp
+    private Date updateAt;
 
     @Column(name = "update_by")
     private String updateBy;
@@ -53,16 +54,6 @@ public class Course implements Serializable {
     @Column(name = "deleted")
     private Boolean deleted;
 
-
-
-
-    @OneToMany(mappedBy = "course", cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH}
-    )
-    private List<Lessons> listLessons;
 
     @ManyToMany(fetch = FetchType.LAZY , cascade = {
             CascadeType.DETACH,
@@ -81,5 +72,9 @@ public class Course implements Serializable {
 
     @OneToMany(mappedBy = "course")
     private List<UserCourse> courseUsers;
+
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Chapter> chapters;
 
 }

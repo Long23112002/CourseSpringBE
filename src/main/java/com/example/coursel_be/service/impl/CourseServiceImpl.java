@@ -1,9 +1,11 @@
 package com.example.coursel_be.service.impl;
 
+import com.example.coursel_be.entity.Chapter;
 import com.example.coursel_be.entity.Course;
 import com.example.coursel_be.entity.User;
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.exceptions.ErrorCode;
+import com.example.coursel_be.repository.ChapterRepository;
 import com.example.coursel_be.repository.CourseRepository;
 import com.example.coursel_be.repository.UserRepository;
 import com.example.coursel_be.request.course.CourseRequest;
@@ -12,27 +14,22 @@ import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final ChapterRepository chapterRepository;
 
-
-
-    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository) {
-        this.courseRepository = courseRepository;
-        this.userRepository = userRepository;
-    }
 
 
     @Override
@@ -75,7 +72,7 @@ public class CourseServiceImpl implements CourseService {
         }
         List<CourseResponse> listCoresResponse = new ArrayList<>();
         for (Course course : listCourses) {
-            listCoresResponse.add(convertCourseToResponse(course));
+            listCoresResponse.add(convertCourseToResponseGetAll(course));
         }
         return listCoresResponse;
     }
@@ -97,18 +94,19 @@ public class CourseServiceImpl implements CourseService {
         Optional<Course> existingCourse = Optional.ofNullable(courseRepository.findById(courseUpdateRequest.getIdCourse()).orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_FOUND)));
         boolean existsByTitle = courseRepository.existsByTitle(courseUpdateRequest.getTitle());
 
+        if (existingCourse.isEmpty()) {
+            throw new AppException(ErrorCode.COURSE_NOT_FOUND);
+        }
+
         if (Objects.equals(existingCourse.get().getTitle(), courseUpdateRequest.getTitle())) {
             existsByTitle = false;
         }
         if (existsByTitle) {
             return "Course already exists";
         }
-        if (existingCourse.isPresent()) {
-            Course courseToUpdate = getCourse(courseUpdateRequest, existingCourse);
-            courseRepository.save(courseToUpdate);
-            return "Course updated successfully";
-        }
-        return "Course not found to update";
+        Course courseToUpdate = getCourse(courseUpdateRequest, existingCourse);
+        courseRepository.save(courseToUpdate);
+        return "Course updated successfully";
     }
 
 
@@ -130,13 +128,18 @@ public class CourseServiceImpl implements CourseService {
         course.setDescription(courseRequest.getDescription());
         course.setCoursePrice(courseRequest.getCoursePrice());
         course.setCreateBy(user.getFullName());
-//        course.setCreatedAt(new Date(System.currentTimeMillis()));
         course.setDeleted(true);
         return course;
     }
 
     private Course getCourse(CourseUpdateRequest courseUpdateRequest, Optional<Course> existingCourse) {
+
+        if (existingCourse.isEmpty()) {
+            throw new AppException(ErrorCode.COURSE_NOT_FOUND);
+        }
+
         Course courseToUpdate = existingCourse.get();
+
         User user = userRepository.findById(courseUpdateRequest.getIdUserUpdate()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         courseToUpdate.setUpdateBy(user.getFullName());
         if (courseUpdateRequest.getTitle() != null) {
@@ -158,6 +161,7 @@ public class CourseServiceImpl implements CourseService {
 
     private CourseResponse convertCourseToResponse(Course course) {
         CourseResponse courseResponse = new CourseResponse();
+        List<Chapter> listChapter = chapterRepository.findAllByCourseId(course.getId());
         courseResponse.setId(course.getId());
         courseResponse.setTitle(course.getTitle());
         courseResponse.setDescription(course.getDescription());
@@ -166,14 +170,26 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCover(course.getCover());
         courseResponse.setDeleted(course.getDeleted());
         courseResponse.setUpdateBy(course.getUpdateBy());
-        courseResponse.setCreatedAt(formatTimestamp(course.getCreatedAt()));
-        courseResponse.setUpdateAt(formatTimestamp(course.getUpdateAt()));
+        courseResponse.setCreatedAt(course.getCreatedAt());
+        courseResponse.setUpdateAt(course.getUpdateAt());
+
+        courseResponse.setListChapter(listChapter);
         return courseResponse;
     }
 
-    private String formatTimestamp(long timestampMillis) {
-        Date date = new Date(timestampMillis);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
+    private CourseResponse convertCourseToResponseGetAll(Course course) {
+        CourseResponse courseResponse = new CourseResponse();
+        courseResponse.setId(course.getId());
+        courseResponse.setTitle(course.getTitle());
+        courseResponse.setDescription(course.getDescription());
+        courseResponse.setCoursePrice(course.getCoursePrice());
+        courseResponse.setCreateBy(course.getCreateBy());
+        courseResponse.setCover(course.getCover());
+        courseResponse.setDeleted(course.getDeleted());
+        courseResponse.setUpdateBy(course.getUpdateBy());
+        courseResponse.setCreatedAt(course.getCreatedAt());
+        courseResponse.setUpdateAt(course.getUpdateAt());
+        return courseResponse;
     }
+
 }

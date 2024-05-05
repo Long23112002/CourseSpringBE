@@ -2,6 +2,7 @@ package com.example.coursel_be.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class PurchaseHistory implements Serializable {
     private Long id;
 
     @Column(name = "purchase_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date purchaseDate;
 
     @Column(name = "purchase_amount")

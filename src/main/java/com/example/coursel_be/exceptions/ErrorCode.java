@@ -21,6 +21,7 @@ public enum ErrorCode {
     COURSE_NOT_FOUND(404, "Course not found", HttpStatus.NOT_FOUND),
     COURSE_ALREADY_EXISTS(409, "Course already exists", HttpStatus.CONFLICT),
     COURSE_SAVE_ERROR(500, "Error saving course", HttpStatus.INTERNAL_SERVER_ERROR),
+    CHAPTER_NOT_FOUND(404, "Chapter not found", HttpStatus.NOT_FOUND),
     ;
 
 

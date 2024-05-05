@@ -1,9 +1,9 @@
 package com.example.coursel_be.entity;
 
-import com.example.coursel_be.listener.AuditCourseListener;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EntityListeners(AuditCourseListener.class)
 public class User implements Serializable {
 
     @Id
@@ -36,13 +35,13 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "created_date" , updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Long createdDate;
+    @Column(name = "created_date" , updatable = false , nullable = false)
+    @CreationTimestamp
+    private Date createdDate;
 
     @Column(name = "updated_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Long updatedDate;
+    @UpdateTimestamp
+    private Date updatedDate;
 
     @Column(name = "avatar")
     private String avatar;

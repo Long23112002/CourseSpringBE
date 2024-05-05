@@ -32,13 +32,7 @@ public class CourseController {
         try {
             String isSaved = courseService.saveCourse(courseRequest);
 
-            if (isSaved != null) {
-                ApiResponse<String> apiResponse = new ApiResponse<>();
-                apiResponse.setCode(201);
-                apiResponse.setMessage(isSaved);
-                return ResponseEntity.ok(apiResponse);
-            }
-            return ResponseEntity.badRequest().body(isSaved);
+            return getResponseEntity(isSaved);
         } catch (AppException e) {
             return ResponseEntity.badRequest().body(buildErrorResponse(e));
         } catch (Exception e) {

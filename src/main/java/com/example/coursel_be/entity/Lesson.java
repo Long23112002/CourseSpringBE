@@ -1,7 +1,10 @@
 package com.example.coursel_be.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Lessons implements Serializable {
+public class Lesson implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +30,15 @@ public class Lessons implements Serializable {
     @Column(name = "lessons_content")
     private String content;
 
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at" , updatable = false , nullable = false)
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(name = "create_by")
     private String createBy;
 
     @Column(name = "update_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     private Date updateAt;
 
     @Column(name = "update_by")
@@ -50,16 +53,6 @@ public class Lessons implements Serializable {
     @Column(name = "deleted")
     private Boolean deleted;
 
-    @ManyToOne( cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
-    @JoinColumn(name = "id_course" , nullable = false)
-    private Course course;
-
-
     @OneToMany(mappedBy = "lessons", cascade = {
             CascadeType.DETACH,
             CascadeType.MERGE,
@@ -67,5 +60,11 @@ public class Lessons implements Serializable {
             CascadeType.REFRESH}
     )
     private List<Comments> listComments;
+
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "chapter_id", nullable = false)
+    private Chapter chapter;
 
 }

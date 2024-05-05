@@ -42,5 +42,5 @@ public class Comments implements Serializable {
             CascadeType.REFRESH
     })
     @JoinColumn(name = "id_lessons", nullable = false)
-    private Lessons lessons;
+    private Lesson lessons;
 }
