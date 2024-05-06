@@ -49,7 +49,6 @@ public class User implements Serializable {
     @Column(name="gender")
     private String gender;
 
-
     @Column(name="phone")
     private String phone;
 
@@ -89,5 +88,8 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<UserCourse> userCourses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notification> notifications;
 
 }

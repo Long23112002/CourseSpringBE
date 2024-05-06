@@ -2,16 +2,19 @@ package com.example.coursel_be.service.impl;
 
 import com.example.coursel_be.entity.Chapter;
 import com.example.coursel_be.entity.Course;
+import com.example.coursel_be.entity.Notification;
 import com.example.coursel_be.entity.User;
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.exceptions.ErrorCode;
 import com.example.coursel_be.repository.ChapterRepository;
 import com.example.coursel_be.repository.CourseRepository;
+import com.example.coursel_be.repository.NotificationRepository;
 import com.example.coursel_be.repository.UserRepository;
 import com.example.coursel_be.request.course.CourseRequest;
 import com.example.coursel_be.request.course.CourseUpdateRequest;
 import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
+import com.example.coursel_be.service.EmailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,14 +32,14 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final ChapterRepository chapterRepository;
-
+    private final EmailService emailService;
+    private final NotificationRepository notificationRepository;
 
 
     @Override
     @Transactional
     public String saveCourse(CourseRequest courseRequest) {
         try {
-
             if (courseRequest == null) {
                 return "Course not found";
             }
@@ -49,6 +52,10 @@ public class CourseServiceImpl implements CourseService {
             User user = userRepository.findById(courseRequest.getIdUserCreate()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
             Course course = getCourseFromRequest(courseRequest, user);
             courseRepository.save(course);
+            String notificationMessage = "A new course '" + course.getTitle() + "' has been created.";
+            saveNotificationForAllUsers(notificationMessage);
+            sendEmailNotificationForAllUsers(course);
+
             return "Course saved successfully";
         } catch (Exception e) {
             throw new AppException(ErrorCode.COURSE_SAVE_ERROR);
@@ -190,6 +197,34 @@ public class CourseServiceImpl implements CourseService {
         courseResponse.setCreatedAt(course.getCreatedAt());
         courseResponse.setUpdateAt(course.getUpdateAt());
         return courseResponse;
+    }
+
+
+    private void saveNotificationForAllUsers(String message) {
+        List<User> allUsers = userRepository.findAll();
+        for (User u : allUsers) {
+            if (u.getListRoles().stream().noneMatch(role -> role.getRoleName().equals("ROLE_ADMIN"))) {
+                Notification notification = new Notification();
+                notification.setMessage(message);
+                notification.setUser(u);
+                notificationRepository.save(notification);
+            }
+        }
+    }
+
+    private void sendEmailNotificationForAllUsers(Course course) {
+        String messageBody = "<html><body>" +
+                "<h2>New Course Created</h2>" +
+                "<p>A new course has been created:</p>" +
+                "<p><strong>Course Title:</strong> " + course.getTitle() + "</p>" +
+                "<p><strong>Create by :</strong> " + course.getCreateBy() + "</p>" +
+                "<img src=\"https://img-angularjs.s3.amazonaws.com/productimage/avatar.jpg\" alt=\"New Course\" style=\"width: 300px; border-radius: 5%;\">" +
+                "<p>For more details, please visit our website.</p>" +
+                "</body></html>";
+        List<User> allUsers = userRepository.findAll();
+        for (User u : allUsers) {
+            emailService.sendMessage("longjava2024@gmail.com", u.getEmail(), "New Course Created", messageBody);
+        }
     }
 
 }
