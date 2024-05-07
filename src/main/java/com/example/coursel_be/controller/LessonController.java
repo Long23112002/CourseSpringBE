@@ -2,6 +2,7 @@ package com.example.coursel_be.controller;
 
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.request.lesson.LessonRequest;
+import com.example.coursel_be.request.lesson.LessonUpdateRequest;
 import com.example.coursel_be.response.error.ApiResponse;
 import com.example.coursel_be.service.LessonService;
 import jakarta.validation.Valid;
@@ -29,7 +30,18 @@ public class LessonController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateLesson(@Valid @RequestBody LessonUpdateRequest lessonUpdateRequest) {
+        try {
+            String isSaved = lessonService.updateLesson(lessonUpdateRequest);
+            return getResponseEntity(isSaved);
+        } catch (AppException e) {
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     static ResponseEntity<?> getResponseEntity(String isSaved) {

@@ -3,6 +3,7 @@ package com.example.coursel_be.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,8 +28,9 @@ public class Blog implements Serializable {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at" , updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(name = "create_by")

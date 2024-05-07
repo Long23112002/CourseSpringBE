@@ -36,6 +36,7 @@ public class Endpoints {
             "/api/v1/course/update/**",
             "/api/v1/course/changeStatus/**",
             "/api/v1/chapter/update",
+            "/api/v1/lesson/update",
     };
 
 
@@ -46,6 +47,7 @@ public class Endpoints {
 
     public static final String[] CUSTOMER_POST = {
             "/api/v1/user/addUserCourse",
+            "/api/v1/blog/save",
     };
 
     public static final String[] CUSTOMER_PUT = {
