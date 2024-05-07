@@ -15,6 +15,7 @@ import com.example.coursel_be.request.course.CourseUpdateRequest;
 import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
 import com.example.coursel_be.service.EmailService;
+import com.example.coursel_be.service.KafkaEmailProducerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class CourseServiceImpl implements CourseService {
     private final ChapterRepository chapterRepository;
     private final EmailService emailService;
     private final NotificationRepository notificationRepository;
+    private final KafkaEmailProducerService kafkaEmailProducerService;
 
 
     @Override
@@ -54,8 +56,7 @@ public class CourseServiceImpl implements CourseService {
             courseRepository.save(course);
             String notificationMessage = "A new course '" + course.getTitle() + "' has been created.";
             saveNotificationForAllUsers(notificationMessage);
-            sendEmailNotificationForAllUsers(course);
-
+            kafkaEmailProducerService.sendEmailNotification(course.getTitle());
             return "Course saved successfully";
         } catch (Exception e) {
             throw new AppException(ErrorCode.COURSE_SAVE_ERROR);
@@ -212,19 +213,5 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    private void sendEmailNotificationForAllUsers(Course course) {
-        String messageBody = "<html><body>" +
-                "<h2>New Course Created</h2>" +
-                "<p>A new course has been created:</p>" +
-                "<p><strong>Course Title:</strong> " + course.getTitle() + "</p>" +
-                "<p><strong>Create by :</strong> " + course.getCreateBy() + "</p>" +
-                "<img src=\"https://img-angularjs.s3.amazonaws.com/productimage/avatar.jpg\" alt=\"New Course\" style=\"width: 300px; border-radius: 5%;\">" +
-                "<p>For more details, please visit our website.</p>" +
-                "</body></html>";
-        List<User> allUsers = userRepository.findAll();
-        for (User u : allUsers) {
-            emailService.sendMessage("longjava2024@gmail.com", u.getEmail(), "New Course Created", messageBody);
-        }
-    }
 
 }

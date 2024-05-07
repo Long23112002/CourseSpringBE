@@ -7,6 +7,7 @@ import com.example.coursel_be.response.course.CourseResponse;
 import java.util.List;
 
 public interface CourseService {
+
     String saveCourse(CourseRequest courseRequest);
 
     CourseResponse getCourseById(Long courseId);
@@ -18,6 +19,5 @@ public interface CourseService {
     String updateCourse(CourseUpdateRequest courseUpdateRequest);
 
     String changeStatusCourse(Long courseId);
-
 
 }
