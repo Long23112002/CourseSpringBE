@@ -8,4 +8,6 @@ public interface LessonService {
     String saveLesson(LessonRequest lessonRequest);
 
     String updateLesson(LessonUpdateRequest lessonUpdateRequest);
+
+    void  saveNotificationLessonForAllUsers(String message);
 }

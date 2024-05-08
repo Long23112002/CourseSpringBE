@@ -1,6 +1,6 @@
 package com.example.coursel_be.service;
 
-public interface KafkaEmailConsumerService {
+public interface EmailConsumerService {
 
      void listenEmailNotifications(String message);
 

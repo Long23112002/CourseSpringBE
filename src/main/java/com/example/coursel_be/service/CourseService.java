@@ -20,4 +20,6 @@ public interface CourseService {
 
     String changeStatusCourse(Long courseId);
 
+    void saveNotificationForAllUsers(String message);
+
 }

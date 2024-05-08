@@ -15,7 +15,8 @@ import com.example.coursel_be.request.course.CourseUpdateRequest;
 import com.example.coursel_be.response.course.CourseResponse;
 import com.example.coursel_be.service.CourseService;
 import com.example.coursel_be.service.EmailService;
-import com.example.coursel_be.service.KafkaEmailProducerService;
+import com.example.coursel_be.service.EmailProducerService;
+import com.example.coursel_be.service.NotificationProducerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,9 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final ChapterRepository chapterRepository;
-    private final EmailService emailService;
     private final NotificationRepository notificationRepository;
-    private final KafkaEmailProducerService kafkaEmailProducerService;
+    private final EmailProducerService kafkaEmailProducerService;
+    private final NotificationProducerService notificationProducerService;
 
 
     @Override
@@ -54,9 +55,11 @@ public class CourseServiceImpl implements CourseService {
             User user = userRepository.findById(courseRequest.getIdUserCreate()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
             Course course = getCourseFromRequest(courseRequest, user);
             courseRepository.save(course);
-            String notificationMessage = "A new course '" + course.getTitle() + "' has been created.";
-            saveNotificationForAllUsers(notificationMessage);
-            kafkaEmailProducerService.sendEmailNotification(course.getTitle());
+            if(courseRequest != null){
+                String notificationMessage = "A new course '" + course.getTitle() + "' has been created.";
+                notificationProducerService.sendNotification(notificationMessage);
+                kafkaEmailProducerService.sendEmailNotification(notificationMessage);
+            }
             return "Course saved successfully";
         } catch (Exception e) {
             throw new AppException(ErrorCode.COURSE_SAVE_ERROR);
@@ -200,8 +203,8 @@ public class CourseServiceImpl implements CourseService {
         return courseResponse;
     }
 
-
-    private void saveNotificationForAllUsers(String message) {
+    @Override
+    public void saveNotificationForAllUsers(String message) {
         List<User> allUsers = userRepository.findAll();
         for (User u : allUsers) {
             if (u.getListRoles().stream().noneMatch(role -> role.getRoleName().equals("ROLE_ADMIN"))) {

@@ -2,18 +2,22 @@ package com.example.coursel_be.service.impl;
 
 import com.example.coursel_be.entity.Chapter;
 import com.example.coursel_be.entity.Lesson;
+import com.example.coursel_be.entity.Notification;
 import com.example.coursel_be.entity.User;
 import com.example.coursel_be.exceptions.AppException;
 import com.example.coursel_be.exceptions.ErrorCode;
 import com.example.coursel_be.repository.ChapterRepository;
 import com.example.coursel_be.repository.LessonRepository;
+import com.example.coursel_be.repository.NotificationRepository;
 import com.example.coursel_be.repository.UserRepository;
 import com.example.coursel_be.request.lesson.LessonRequest;
 import com.example.coursel_be.request.lesson.LessonUpdateRequest;
 import com.example.coursel_be.service.LessonService;
+import com.example.coursel_be.service.NotificationProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +27,8 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final ChapterRepository chapterRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
+    private final NotificationProducerService notificationProducerService;
 
     @Override
     public String saveLesson(LessonRequest lessonRequest) {
@@ -34,6 +40,7 @@ public class LessonServiceImpl implements LessonService {
                 Optional<User> user = Optional.ofNullable(userRepository.findById(lessonRequest.getIdUserCreate()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
                 Lesson lesson = getLesson(lessonRequest, chapter, user);
                 lessonRepository.save(lesson);
+                notificationProducerService.sendNotificationLesson("A new lesson '" + lesson.getTitle() + "' has been created.");
                 return "Lesson saved successfully";
             } else {
                 return "Lesson already exists";
@@ -78,6 +85,18 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
+    @Override
+    public void saveNotificationLessonForAllUsers(String message) {
+        List<User> allUsers = userRepository.findAll();
+        for (User u : allUsers) {
+            if (u.getListRoles().stream().noneMatch(role -> role.getRoleName().equals("ROLE_ADMIN"))) {
+                Notification notification = new Notification();
+                notification.setMessage(message);
+                notification.setUser(u);
+                notificationRepository.save(notification);
+            }
+        }
+    }
 
 
     private Lesson getLesson(LessonRequest lessonRequest, Optional<Chapter> chapter, Optional<User> user) {
