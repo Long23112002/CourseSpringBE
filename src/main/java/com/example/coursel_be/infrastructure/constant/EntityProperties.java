@@ -1,4 +1,4 @@
-package com.example.coursel_be.infastructure.constant;
+package com.example.coursel_be.infrastructure.constant;
 
 public class EntityProperties {
     public static final int MAX_LENGTH_225 = 255;

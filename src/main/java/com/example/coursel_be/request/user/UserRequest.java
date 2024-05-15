@@ -1,6 +1,6 @@
 package com.example.coursel_be.request.user;
 
-import com.example.coursel_be.infastructure.constant.EntityProperties;
+import com.example.coursel_be.infrastructure.constant.EntityProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

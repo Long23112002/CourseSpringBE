@@ -1,6 +1,6 @@
 package com.example.coursel_be.request.course;
 
-import com.example.coursel_be.infastructure.constant.EntityProperties;
+import com.example.coursel_be.infrastructure.constant.EntityProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

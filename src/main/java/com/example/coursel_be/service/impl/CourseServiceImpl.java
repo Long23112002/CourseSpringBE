@@ -17,6 +17,7 @@ import com.example.coursel_be.service.CourseService;
 import com.example.coursel_be.service.EmailService;
 import com.example.coursel_be.service.EmailProducerService;
 import com.example.coursel_be.service.NotificationProducerService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class CourseServiceImpl implements CourseService {
     private final NotificationRepository notificationRepository;
     private final EmailProducerService kafkaEmailProducerService;
     private final NotificationProducerService notificationProducerService;
-
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
@@ -56,9 +57,9 @@ public class CourseServiceImpl implements CourseService {
             Course course = getCourseFromRequest(courseRequest, user);
             courseRepository.save(course);
             if(courseRequest != null){
-                String notificationMessage = "A new course '" + course.getTitle() + "' has been created.";
-                notificationProducerService.sendNotification(notificationMessage);
-                kafkaEmailProducerService.sendEmailNotification(notificationMessage);
+                String courseJson = objectMapper.writeValueAsString(courseRequest);
+                notificationProducerService.sendNotification(courseJson);
+                kafkaEmailProducerService.sendEmailNotification(courseJson);
             }
             return "Course saved successfully";
         } catch (Exception e) {
