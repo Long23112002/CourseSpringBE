@@ -44,6 +44,17 @@ public class LessonController {
         }
     }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getLessonByID(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(lessonService.getLessonByID(id));
+        } catch (AppException e) {
+            return ResponseEntity.badRequest().body(buildErrorResponse(e));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     static ResponseEntity<?> getResponseEntity(String isSaved) {
         if (isSaved != null) {
             ApiResponse<String> apiResponse = new ApiResponse<>();

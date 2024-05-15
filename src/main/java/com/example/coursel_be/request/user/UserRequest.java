@@ -1,5 +1,6 @@
 package com.example.coursel_be.request.user;
 
+import com.example.coursel_be.infastructure.constant.EntityProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -15,16 +16,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserRequest {
 
-    @Size(min = 5, max = 50, message = "Username must be between 5 and 50 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_5, max = EntityProperties.MAX_LENGTH_50, message = "Username must be between 5 and 50 characters")
     @NotBlank(message = "Username is required")
     private String userName;
 
     @NotBlank(message = "Full name is required")
-    @Size(min = 5, max = 50, message = "Full name must be between 5 and 50 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_5, max = EntityProperties.MAX_LENGTH_50, message = "Full name must be between 5 and 50 characters")
     private String fullName;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 50, message = "Password must be between 5 and 50 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_5, max = EntityProperties.MAX_LENGTH_50, message = "Password must be between 5 and 50 characters")
     private String password;
 
     @NotBlank(message = "Email is required")

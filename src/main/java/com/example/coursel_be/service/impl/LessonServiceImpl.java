@@ -12,6 +12,7 @@ import com.example.coursel_be.repository.NotificationRepository;
 import com.example.coursel_be.repository.UserRepository;
 import com.example.coursel_be.request.lesson.LessonRequest;
 import com.example.coursel_be.request.lesson.LessonUpdateRequest;
+import com.example.coursel_be.response.lesson.LessonResponse;
 import com.example.coursel_be.service.LessonService;
 import com.example.coursel_be.service.NotificationProducerService;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@ public class LessonServiceImpl implements LessonService {
                     if (lessonUpdateRequest.getVideoUrl() != null) {
                         lesson.setVideoUrl(lessonUpdateRequest.getVideoUrl());
                     }
-                    if(lessonUpdateRequest.getIdChapter() != null){
+                    if (lessonUpdateRequest.getIdChapter() != null) {
                         lesson.setChapter(chapterOptional.get());
                     }
                     lesson.setUpdateBy(userOptional.get().getFullName());
@@ -96,6 +97,27 @@ public class LessonServiceImpl implements LessonService {
                 notificationRepository.save(notification);
             }
         }
+    }
+
+    @Override
+    public LessonResponse getLessonByID(Long id) {
+        try {
+            Optional<Lesson> lessonOptional = lessonRepository.findById(id);
+            if (lessonOptional.isPresent()) {
+                LessonResponse lessonResponse = new LessonResponse();
+                lessonResponse.setIdLesson(lessonOptional.get().getId());
+                lessonResponse.setTitle(lessonOptional.get().getTitle());
+                lessonResponse.setContent(lessonOptional.get().getContent());
+                lessonResponse.setDeleted(lessonOptional.get().getDeleted());
+                lessonResponse.setVideoUrl(lessonOptional.get().getVideoUrl());
+                lessonResponse.setLessonSequence(lessonOptional.get().getLessonSequence());
+                return lessonResponse;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNCATEGORIZED);
+        }
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.coursel_be.request.course;
 
+import com.example.coursel_be.infastructure.constant.EntityProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -22,11 +23,11 @@ public class CourseUpdateRequest {
     @NotNull(message = "Id user create is not empty")
     private Long idUserUpdate;
 
-    @Size(min = 10, max = 50, message = "Title must be between 5 and 50 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_10, max = EntityProperties.MAX_LENGTH_50, message = "Title must be between 5 and 50 characters")
     @NotBlank(message = "Title is not empty")
     private String title;
 
-    @Size(min = 10, max = 255, message = "Description must be between 10 and 255 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_10, max = EntityProperties.MAX_LENGTH_225, message = "Description must be between 10 and 255 characters")
     @NotBlank(message = "Description is not empty")
     private String description;
 

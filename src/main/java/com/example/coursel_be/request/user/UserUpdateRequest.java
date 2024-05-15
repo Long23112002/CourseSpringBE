@@ -1,5 +1,6 @@
 package com.example.coursel_be.request.user;
 
+import com.example.coursel_be.infastructure.constant.EntityProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,7 +17,7 @@ public class UserUpdateRequest {
 //    private Long idUser;
 
     @NotBlank(message = "Full name is not empty")
-    @Size(min = 5, max = 50, message = "Full name must be between 5 and 50 characters")
+    @Size(min = EntityProperties.MAX_LENGTH_5, max = EntityProperties.MAX_LENGTH_50, message = "Full name must be between 5 and 50 characters")
     private String fullName;
 
     private String avatar;
